@@ -5,7 +5,7 @@ import { HostRoot } from './workTags';
 let workInProgress: FiberNode | null;
 
 function prepareFreshStack(root: FiberRootNode) {
-	workInProgress = createWorkInProgress(root.current);
+	workInProgress = createWorkInProgress(root.current, {});
 }
 
 //首屏渲染的时候传入的是hostRootFiber
@@ -28,7 +28,7 @@ function markUpdateFromFiberToRoot(fiber: FiberNode) {
 		return node.stateNode;
 	}
 }
-function renderRoot(root: FiberNode) {
+function renderRoot(root: FiberRootNode) {
 	//初始化
 	prepareFreshStack(root);
 	do {
@@ -42,6 +42,11 @@ function renderRoot(root: FiberNode) {
 			workInProgress = null;
 		}
 	} while (true);
+	let finishedWork = root.current.alternate;
+	root.finishedWork = finishedWork;
+
+	//wip fiberNode树中的flags
+	commitRoot(root);
 }
 function workLoop() {
 	while (workInProgress !== null) {

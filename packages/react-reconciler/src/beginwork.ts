@@ -18,7 +18,9 @@ export const beginWork = (wip: FiberNode) => {
 			if (__DEV__) {
 				console.warn('beginwork未实现类型');
 			}
+			break;
 	}
+	return null;
 };
 
 function updateHostRoot(wip: FiberNode) {
@@ -50,6 +52,12 @@ function updateHostComponent(wip: FiberNode) {
 
 function reconcileChildren(wip: FiberNode, children?: ReactElementType) {
 	const current = wip.alternate;
+	//为什么current！==null 是update
+	//为什么mount的时候不追踪副作用 初次mount有大量的插入操作为什么不标记placement
+	//怎么把例子的五次插入优化成一次
+
+	//mount的时候不做插入标记 只做构建操作
+	//在update的时候才做插入
 	if (current !== null) {
 		//update
 		wip.child = reconcileChildFibers(wip, current?.child, children);
